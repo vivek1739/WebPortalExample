@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+	var myList;
+	var name;
+	function getData() {
+		$.ajax({
+			url : "/TestPortal/webapi/myresource/country",
+			type : "POST",
+			success : function(maindta) {
+				myList = JSON.stringify(maindta);
+				myList = JSON.parse(myList);
+				buildHtmlTable("#excelDataTable");
+			}
+		});
+
+	}
+
+	function buildHtmlTable(selector) {
+		var myList1 = [ {
+			"name" : "abc",
+			"age" : 50
+		}, {
+			"age" : "25",
+			"hobby" : "swimming"
+		}, {
+			"name" : "xyz",
+			"hobby" : "programming"
+		} ];
+		var columns = addAllColumnHeaders(myList, selector);
+
+		for (var i = 0; i < myList.length; i++) {
+			var row$ = $('<tr/>');
+			for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+				var cellValue = myList[i][columns[colIndex]];
+				if (cellValue == null)
+					cellValue = "";
+				row$.append($('<td/>').html(cellValue));
+			}
+			$(selector).append(row$);
+		}
+	}
+
+	function addAllColumnHeaders(myList, selector) {
+		var columnSet = [];
+		var headerTr$ = $('<tr/>');
+
+		for (var i = 0; i < myList.length; i++) {
+			var rowHash = myList[i];
+			for ( var key in rowHash) {
+				if ($.inArray(key, columnSet) == -1) {
+					columnSet.push(key);
+					headerTr$.append($('<th/>').html(key));
+				}
+			}
+		}
+		$(selector).append(headerTr$);
+
+		return columnSet;
+	}
+
+	function getUser() {
+		$.ajax({
+			url : "/TestPortal/webapi/myresource/name",
+			type : "GET",
+			success : function(maindta) {
+				alert(maindta.toString());
+			}
+		});
+
+	}
+	// <input type="button" value="Generate Table" onclick="buildHtmlTable('#excelDataTable')" />
+</script>
+</head>
+
+
+<body>
+	<div>
+		<input type="button" value="Generate Table" onclick="return getData()" />
+	</div>
+	<br>
+
+	<div>
+		<p>Database: world Table: Country</p>
+		<input type="button" value="sss" onclick="return getUser()" />
+		<p id="userid"></p>
+	</div>
+
+
+	<br>
+	<br>
+	<br>
+	<div>
+		<table id="excelDataTable" border="1">
+		</table>
+	</div>
+
+
+</body>
+</html>

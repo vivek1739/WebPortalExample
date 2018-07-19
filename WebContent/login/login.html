@@ -1,0 +1,222 @@
+
+<title>Login</title>
+   <link rel="stylesheet" href="app/assets/css/font-awesome.min.css"/>
+   <link rel="stylesheet" href="app/assets/css/app.css"/>
+   <style>
+	body {
+    	overflow: hidden;
+	}
+	.forms-container{
+		background: #ECF0F5;
+		position: absolute;
+		right: 15%;
+		top: 10%;
+		bottom: 10%;
+	    border-radius:3px; 
+	    padding: 15px;
+	    overflow: hidden;
+	}
+	.log-field{
+		padding: 12px;
+	    margin-bottom: 12px;
+	    border-radius: 3px;
+	    border: 2px solid transparent;
+	    outline: none;
+	    font-size: 16px;
+	    transition: 0.7s border-color ease;
+	}
+	.log-field:focus{
+		border-color:cornflowerblue; 
+	}
+	.login-image{
+		text-align: center;
+		color:#989898;
+		font-size: 5em;
+	}
+	.login-image img{
+		border-radius: 60%;
+	    width: 35%;
+	}
+	.login-title{
+		color: #706659;
+	    text-align: center;
+	    font-size: 25px;
+	    margin: 25px 0px;
+	}
+	.slider-container {
+		width: 100%;
+		height:100vh;
+		overflow: hidden;
+		position: relative;
+		background-size: cover;
+		background-image: url(app/assets/img/log-bg.jpg);
+		transition: 0.7s left cubic-bezier(0.22, 0.61, 0.36, 1)
+	}
+	.login-slider-container {
+		left: 0;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+	    background-color: rgba(0, 0, 0, 0.5);
+		min-height: 100vh;
+		position: relative;
+		transition: 0.7s all ease-in-out;
+	}
+	.slide-content {
+		display: inline-block;
+		float: left;
+		padding: 50px 1% 20px 1%;
+		min-height: inherit;
+		width: 100%;
+	}
+	.slide-content img {
+		width: 43vw;
+	}
+	.left-slide-panel{
+		left:-110%;
+	}
+	.right-slide-panel{
+		left:110%;
+	}
+	.form-slide{
+		width:100%;
+		position: absolute;
+		opacity: 0;
+		transition:left 0.7s ease, opacity 0.7s ease;
+		z-index: 2;
+		background: #ECF0F5;
+	}
+	.form-slide.active{
+		left:0 !important;
+		opacity: 1;
+	}
+</style>
+<body ng-app="loginApp" ng-controller="loginCtrl">
+	<div class="slider-container">
+		<ul class="login-slider-container">
+			<li class="slide-content">
+				<img src="app/assets/img/ditaas.png" />
+			</li>
+			<li class="slide-content">
+				<img src="app/assets/img/ditaas.png" />
+			</li>
+			
+			<li class="slide-content">
+				<img src="app/assets/img/ditaas.png" />
+			</li>
+			
+			<li class="slide-content">
+				<img src="app/assets/img/ditaas.png" />
+			</li>
+			
+			<li class="slide-content">
+				<img src="app/assets/img/ditaas.png" />
+			</li>
+			
+			<li class="slide-content">
+				<img src="app/assets/img/ditaas.png" />
+			</li>
+		</ul>
+	</div>
+	<div class="grid-md-3 forms-container">
+		<div class="form-slide" ng-class="{'active':activePanel=='login'}" ng-style="{'left': (activePanel=='forgot') ? '+110%' : ((activePanel=='reset') ? '-110%' : '0')}">
+			<div class="row login-image">
+				<i class="fa fa-user"></i>
+			</div>
+			<div class="clear"></div>
+			<div class="login-title">Sign In to DiTaaS</div>
+			<form name="loginForm" class="pad-15" role="form" method=post id="loginForm" novalidate action="j_security_check">
+				<div class="form-group">
+					<input type="text" name="j_username" id="username" placeholder="User Name" class="log-field grid-md-12" ng-model="vm.username" required />
+					<span ng-show="form.j_username.$dirty && form.j_username.$error.required" class="error-msg">Username is required</span>
+				</div>
+				<div class="form-group">
+					<input type="password" name="j_password" id="password" placeholder="Password" class="log-field grid-md-12" ng-model="vm.password" required />
+					<span ng-show="form.j_password.$dirty && form.j_password.$error.required" class="error-msg">Password is required</span>
+				</div>
+				<div class="form-group">
+					<button  class="tc-btn tc-btn-info tc-btn-lg grid-md-12 font-16" type="submit" id="loginBtn" ng-disabled="loginForm.$invalid">Login</button>
+				</div>
+				<div class="form-group" style="padding: 15px 0; color: #2b7fd2">
+					<a href="#" class="pull-left" ng-click="togglePanel('reset')">Change Password</a>
+					<a href="#" class="pull-right" ng-click="togglePanel('forgot')">Forgot Password</a>
+				</div>
+			</form>	
+		</div>
+		
+		<div class="row">
+		<div class="form-slide left-slide-panel" ng-class="{'active':activePanel=='reset'}">
+			<div class="row login-image">
+				<i class="fa fa-key"></i>
+			</div>
+			<div class="clear"></div>
+			<div class="login-title">Change Password</div>
+			<form name="changePasswordForm" novalidate>
+				<div class="form-group">
+					<input class="log-field grid-md-12" type="text" name="username" placeholder="User Name"/>
+				</div>
+				<div class="form-group">
+					<input class="log-field grid-md-12" type="password" name="password" placeholder="Password" ng-model="user.password"/>
+				</div>
+				<div class="form-group">
+					<input class="log-field grid-md-12" type="password" name="newPassword" placeholder="New Password" ng-model="user.newPassword"/>
+				</div>
+				<div class="form-group">
+					<input class="log-field grid-md-12" type="password" name="confirmPassword" placeholder="confirm Password" ng-model="user.confirmPassword"/>
+				</div>
+				<div class="form-group">
+					<button  class="tc-btn tc-btn-info tc-btn-lg grid-md-12 font-16" type="button" ng-click="changePassword()">Submit</button>
+				</div>
+				<div class="form-group" style="padding: 15px 0; color: #2b7fd2">
+					<a href="#" class="pull-left" ng-click="togglePanel('login')">Return to Login</a>
+				</div>
+			</form>	
+		</div>
+		
+		<div class="form-slide right-slide-panel" ng-class="{'active':activePanel=='forgot'}">
+			<div class="row login-image">
+				<i class="fa fa-unlock-alt"></i>
+			</div>
+			<div class="login-title">Forgot Password</div>
+			<form name="forgotPasswordForm" novalidate>
+				<div class="form-group">
+					<input class="log-field grid-md-12" type="text" name="userName" ng-model="user.email" placeholder="Registered Email" required/>
+				</div>
+				<div class="form-group">
+					<button  class="tc-btn tc-btn-info tc-btn-lg grid-md-12 font-16" type="submit" ng-click="forgotPassword()" ng-disabled="forgotPasswordForm.$invalid">Reset</button>
+				</div>
+				<div class="form-group" style="padding: 15px 0; color: #2b7fd2">
+					<a href="#" class="pull-left" ng-click="togglePanel('login')">Return to Login</a>
+				</div>
+			</form>	
+		</div>
+		</div>
+	</div>
+	<!-- <script>
+		var sliderContainer = document.querySelector(".login-slider-container");
+		var slideElements = sliderContainer.querySelectorAll(".slide-content");
+		var sliderContainerWidth = slideElements.length * slideElements[0].offsetWidth;
+		for(var i=0; i<slideElements.length; i++) {
+			slideElements[i].style.width = slideElements[0].offsetWidth + 'px';
+		}
+		document.querySelector(".login-slider-container").style.width = sliderContainerWidth+'px';
+		var slidingCount = 0;
+		window.setInterval(function() {
+			slidingCount++;
+			document.querySelector(".login-slider-container").style.left = '-' + (slidingCount * slideElements[0].offsetWidth) + 'px';
+			if(slidingCount == slideElements.length-1) {
+				slidingCount = 0;
+			}
+		}, 5000);
+	</script> -->
+
+<script src="plugins/lib/jquery/jquery.min.js"></script>
+<script src="plugins/lib/angular/angular.min.js" data-semver="1.2.16"></script>
+<script src="plugins/lib/angular/angular-route.min.js"></script>
+
+<script src="login/js/loginApp.js"></script>
+
+<!-- <script src="login/controllers/ChatLoginController.js"></script>
+<script src="login/controllers/ChangePasswordController.js"></script>
+<script src="login/controllers/ForgotPasswordController.js"></script>  -->
+</body>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!-- <meta charset="ISO-8859-1"> -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta name="description" content="MSPPortal">
+        <meta name="author" content="Happiest Minds">
+        <meta http-equiv="pragma" content="no-cache" />
+        <title>MSPPortal - Happiest Minds</title>
+		
+		
+		<!-- TC  Styles Start -->
+		<link rel="icon" sizes="192x192" href="app/assets/img/touch-icon.png" /> 
+		<link rel="shortcut icon" type="image/x-icon" href="app/assets/img/favicon.ico" />
+		
+		<link rel="stylesheet" type="text/css" href="app/assets/css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/assets/css/nv.d3.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/assets/css/ngDialog.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/assets/css/ngDialog-theme-default.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/assets/css/daterangepicker-bs3.css" />
+		<!-- Cloud Files Starts -->
+
+		<link rel="stylesheet" type="text/css" href="converse/css/converse.css" />
+
+		<link rel="stylesheet" type="text/css" href="app/assets/css/d3.css">
+        <link rel="stylesheet" type="text/css" href="app/assets/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="app/assets/css/ng-grid.css">
+        <!-- Cloud Files Ends -->
+
+        <link rel="stylesheet" type="text/css" href="app/assets/css/datatable.css">
+		
+		<link rel="stylesheet" type="text/css" href="app/assets/css/main.min.css" />
+		<link rel="stylesheet" type="text/css" href="app/assets/css/app.css" />
+		<link rel="stylesheet" type="text/css" href="app/assets/css/dashboard.css" />
+		<link rel="stylesheet" type="text/css" href="app/assets/css/charts.css" />
+        
+		
+        
+		<!-- TC  Styles End -->
+		<script type="text/javascript">
+        	var ROUTING_FEED = ${assemblyJSON};
+        </script>
+
+    </head>
+	<!-- TC Content Start -->
+	<body ng-app="cyberVigilApp" ng-controller="navController" ng-cloak>
+	<header class="top-bar">
+		<div class="main-brand">
+			<ul class="profile"> 
+				<li id="menu-icon" ng-click="toggleMenuExpansion()">
+					<a href="#" class="btn-circle no-circle">
+						<i class="fa fa-bars"></i>
+					</a>
+				</li>
+				<li>
+					<img class="app-logo" src="app/assets/img/logo.png"/>
+				</li>
+			</ul>
+			<div class="main-brand__container">
+				<!--<input type="checkbox" id="s-logo" class="sw"/>
+				<label class="swtc swtc--dark swtc--header" for="s-logo"></label> -->
+				<div class="main-logo">
+					<a href="#" onclick="return false;" class="btn-circle btn-sm active user-info-trigger bottom-tooltip tc-tooltip expand" data-title="View Profile" ng-click="toggleAction('isUserInfoExpand')">
+						<i class="fa fa-user"></i>
+					</a>
+					<a href="#" ng-click="logout()" class="btn-circle btn-sm active user-info-trigger color-info bottom-tooltip tc-tooltip expand" data-title="Logout">
+						<i class="fa fa-power-off"></i>
+					</a>
+					<div class="user-info" ng-class="{'show':isUserInfoExpand}">
+						<figure class="rounded-image profile__img">
+							<img class="media-object profile-image-size " src="app/assets/img/user-default.png" alt="user">
+						</figure>
+						<h2 class="user-info__name">{{userName}}</h2>
+						<h3 class="user-info__role">{{userRole}}</h3>
+						<h5 class="user-info__mail">{{userMail}}</h5>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</header> <!-- /top-bar -->
+	<div class="wrapper">
+		<aside id="side-menu" class="sidebar" ng-class="{'menu-collapse':!isMenuExpanded,'menu-expand':isMenuExpanded}">
+			<ul class="main-nav">
+				<li class="main-nav--collapsible"
+						ng-class="{'main-nav--open':currentParentName==state.stateName,'main-active':activeItem==state.displayName,'tc-tooltip expand':!isMenuExpanded}"
+						data-title="{{state.displayName}}"
+						ng-repeat="state in menuView">
+					<div class="main-nav__link" ng-if="state.subStates.length">
+						<span class="main-nav__icon"><i class="fa {{state.iconClass}}"></i></span>
+						{{state.displayName}}
+					</div>
+					<div class="main-nav__link" ng-click="go(state.stateName,state.displayName)" ng-if="!state.subStates.length">
+						<span class="main-nav__icon"><i class="fa {{state.iconClass}}"></i></span>
+						{{state.displayName}}
+					</div>
+					<ul class="main-nav__submenu">
+						<li ng-repeat="subState in state.subStates" ng-class="{'main-nav--active':activeItem==subState.displayName,'tc-tooltip swing':!isMenuExpanded}" data-title="{{subState.displayName}}" ng-click="go(subState.stateName,subState.displayName,state.stateName)">
+							<a><i class="fa {{subState.iconClass}}"></i><span>{{subState.displayName}}</span></a>
+						</li>
+					</ul>
+				</li>
+				
+			</ul> <!-- /main-nav -->
+		</aside> <!-- /sidebar -->
+		
+		<section class="content">
+			<div class="widget mar-top-2">
+				<header class="widget__header">
+					<div class="widget__title full-width bg-transparent">
+						<strong class="pad-left-10">{{currentStateName}}</strong>
+					</div>
+				</header>
+				<div>
+					<ui-view></ui-view>
+				</div>
+			</div>
+			<div ng-include="" src="'app/views/chat/idle_dialog.html'"></div>
+		</section>
+	</div>
+	<div class="transparent-overlay" ng-if="isUserInfoExpand" ng-click="toggleAction('isUserInfoExpand')"></div>
+	<!-- Libraries Start-->
+	<script src="plugins/lib/jquery/jquery.min.js"></script>
+	<script src="plugins/lib/base64.js"></script>
+	<script src="plugins/lib/angular/angular.min.js"></script>
+
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-sanitize.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.3.1.js"></script>
+	<script src="plugins/lib/angular/angular-ui-router.min.js"></script>
+	<script src="plugins/lib/angular/ngDialog.min.js"></script>
+    <script type="text/javascript" src="plugins/lib/angular/ng-websocket.js"></script>
+
+	<!-- Date Range Picker Plugins Start -->
+	<script type="text/javaScript" src="plugins/lib/charts/d3.min.js"></script>
+	 <script type="text/javaScript" src="plugins/lib/charts/nv.d3.min.js"></script>
+	<!--<script type="text/javaScript" src="plugins/lib/charts/angular-nvd3.min.js"></script> -->
+	<script type="text/javaScript" src="plugins/lib/charts/d3pie.min.js"></script>
+	<!-- Date Range Picker Plugins End -->
+	
+	<script type="text/javaScript" src="plugins/lib/daterangepicker/moment.js"></script>
+	<script type="text/javaScript" src="plugins/lib/daterangepicker/daterangepicker.js"></script>
+	<script type="text/javaScript" src="plugins/lib/daterangepicker/ng-bs-daterangepicker.js"></script>
+	<!-- Libraries End-->
+
+	<!-- Data Tables -->
+	<script type="text/javaScript" src="plugins/lib/datatable/angular-datatables.min.js"></script>
+	<script type="text/javaScript" src="plugins/lib/datatable/jquery.dataTables.min.js"></script>
+	<!-- Data Tables -->
+	
+	<!-- Configuration Start-->
+	<!-- <script type="text/javascript" src="app/assets/js/constants.js"></script> -->
+	<script type="text/javascript" src="app/assets/js/routing.js"></script>
+	<script type="text/javascript" src="app/assets/js/app.js"></script>
+	<script type="text/javascript" src="app/assets/js/tcConstant.js"></script>
+    <!--<script type="text/javascript" src="app/assets/js/cloudConstant.js"></script>-->
+	
+	<script type="text/javascript" src="app/assets/js/directives/gauge-chart.directive.js"></script>
+	<script type="text/javascript" src="app/assets/js/directives/cv-assetChart.js"></script>
+	<script type="text/javascript" src="app/assets/js/directives/sun-burst-chart.directive.js"></script>
+	<script type="text/javascript" src="app/assets/js/directives/tc-pie-chart.directive.js"></script>
+	<script type="text/javaScript" src="app/assets/js/directives/tc-bar-chart.directive.js"></script>
+	<script type="text/javaScript" src="app/assets/js/directives/tc-stacked-grouped-chart.directive.js"></script>
+	<script type="text/javaScript" src="app/assets/js/directives/tc-horizontal-stacked-bar-chart.directive.js"></script>
+
+	<!-- Configuration End-->
+	
+	<!-- TC Content End -->
+	
+	 <script src="plugins/lib/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="plugins/lib/grid/ng-grid.min.js"></script>
+   
+   <!-- <script src="plugins/lib/charts/d3.v3.min.js"></script>-->
+    <script src="plugins/lib/charts/d3-funnel.js"></script>
+    <script src="plugins/lib/charts/nvtooltip.js"></script>
+    <script src="app/assets/js/d3.tip.v0.6.3.js"></script>
+    <script src="plugins/lib/charts/d3legend.js"></script> 
+    <script src="plugins/lib/charts/d3line.js"></script> 
+    <script src="plugins/lib/charts/d3linewithlegend.js"></script>
+    <script src="https://s3-ap-southeast-1.amazonaws.com/charts.pykih.com/gists/pyramid.js"></script>
+
+    <!-- converse -->
+		<!-- BEGIN JQUERY -->
+		<script type="text/javascript" src="converse/components/jquery.browser/dist/jquery.browser.js"></script>
+		<script type="text/javascript" src="converse/components/typeahead.js/index.js"></script>
+		<!-- END JQUERY -->
+
+		<!-- BEGIN OTR: Off-the-record encryption stuff. Can be omitted if OTR is not used. -->
+		<script type="text/javascript" src="converse/components/otr/build/dep/salsa20.js"></script>
+		<script type="text/javascript" src="converse/src/bigint.js"></script>
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/core.js"></script>
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/enc-base64.js"></script>
+		<!-- <script type="text/javascript" src="converse/components/crypto-js-evanvosberg/src/md5.js"></script>
+		<script type="text/javascript" src="converse/components/crypto-js-evanvosberg/src/evpkdf.js"></script> -->
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/cipher-core.js"></script>
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/aes.js"></script>
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/sha1.js"></script>
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/sha256.js"></script>
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/hmac.js"></script>
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/pad-nopadding.js"></script>
+		<script type="text/javascript" src="converse/components/otr/vendor/cryptojs/mode-ctr.js"></script>
+		<script type="text/javascript" src="converse/components/otr/build/dep/eventemitter.js"></script>
+		<script type="text/javascript" src="converse/src/otr.js"></script>
+		<!-- END OTR -->
+
+		<!-- BEGIN STROPHE -->
+		<script type="text/javascript" src="converse/components/strophejs/strophe.js"></script>
+		<script type="text/javascript" src="converse/components/strophejs-plugins/vcard/strophe.vcard.js"></script>
+		<script type="text/javascript" src="converse/components/strophejs-plugins/disco/strophe.disco.js"></script>
+		<script type="text/javascript" src="converse/components/strophejs-plugins/rsm/strophe.rsm.js"></script>
+		<script type="text/javascript" src="converse/src/strophe.ping.js"></script>
+		<!-- END STROPHE -->
+
+		<!-- BEGIN BACKBONE -->
+		<script type="text/javascript" src="converse/components/underscore/underscore.js"></script>
+		<script type="text/javascript" src="converse/components/backbone//backbone.js"></script>
+		<script type="text/javascript" src="converse/components/backbone.browserStorage/backbone.browserStorage.js"></script>
+		<script type="text/javascript" src="converse/components/backbone.overview/backbone.overview.js"></script>
+		<!-- END BACKBONE -->
+
+		<!-- BEGIN I18N -->
+		<!-- These files can be removed if you don't want to include any
+			translations for converse.js.
+			If you want to modify which translations are included, you can modify
+			src/locales.js to remove those you don't need, and then run `make
+			build` to generates a new dist/locales.js file.
+		-->
+		<script type="text/javascript" src="converse/components/jed/jed.js"></script>
+		<script type="text/javascript" src="converse/dist/locales.js"></script>
+		<!-- END I18N -->
+
+		<script type="text/javascript" src="converse/components/momentjs/min/moment-with-locales.js"></script>
+		<script type="text/javascript" src="converse/dist/converse-no-dependencies.js"></script>
+		<!-- end of converse -->
+		
+		<script src="login/js/ChatLogin.js"></script>
+    </body>
+</html>

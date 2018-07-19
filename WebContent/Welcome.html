@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> 
+<script type="text/javascript">
+ var myList;
+function getData() {
+	$.ajax(
+			{
+			url: "/TestPortal/webapi/myresource/country",
+			type: "POST",
+			success:function(maindta)
+			{
+				myList=JSON.stringify(maindta);
+				myList=JSON.parse(myList);
+				buildHtmlTable("#excelDataTable");
+			}
+			});
+	
+}
+ 
+function buildHtmlTable(selector) {
+var myList1 = [
+	  { "name": "abc", "age": 50 },
+	  { "age": "25", "hobby": "swimming" },
+	  { "name": "xyz", "hobby": "programming" }
+	];
+	  var columns = addAllColumnHeaders(myList, selector);
+
+	  for (var i = 0; i < myList.length; i++) {
+	    var row$ = $('<tr/>');
+	    for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+	      var cellValue = myList[i][columns[colIndex]];
+	      if (cellValue == null) cellValue = "";
+	      row$.append($('<td/>').html(cellValue));
+	    }
+	    $(selector).append(row$);
+	  }
+	}
+
+
+
+function addAllColumnHeaders(myList, selector) {
+	  var columnSet = [];
+	  var headerTr$ = $('<tr/>');
+
+	  for (var i = 0; i < myList.length; i++) {
+	    var rowHash = myList[i];
+	    for (var key in rowHash) {
+	      if ($.inArray(key, columnSet) == -1) {
+	        columnSet.push(key);
+	        headerTr$.append($('<th/>').html(key));
+	      }
+	    }
+	  }
+	  $(selector).append(headerTr$);
+
+	  return columnSet;
+}
+// <input type="button" value="Generate Table" onclick="buildHtmlTable('#excelDataTable')" />
+</script>
+</head>
+
+
+<body>
+<input type="button" value="Generate Table" onclick="return getData()" />
+Database: world &nbsp &nbsp Table: Country
+
+<br><br><br>
+<table id="excelDataTable" border="1">
+  </table>
+
+
+
+</body>
+</html>

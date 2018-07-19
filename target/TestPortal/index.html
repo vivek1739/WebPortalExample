@@ -1,0 +1,221 @@
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> 
+
+  <style>
+    #fname,#lname{
+		border-radius: 10px;
+		padding: 10px; 
+		width: 160px;
+		height: 30px;    
+	}
+	#submit{
+	border-radius: 10px;
+		padding: 6px; 
+		width: 95px;
+		height: 40px;
+		position:absolute;
+		top:50px;
+		right:180px;
+		}
+		
+		#forgot{
+	border-radius: 10px;
+		padding: 5px; 
+	position:absolute;
+	top:50px;
+	right:70px;
+	width:95px;
+	height:40px;
+	}
+	
+	div.form{
+	position:absolute;
+	top:180px;
+	right:120px;
+	}
+	div.forgotform{
+	position:absolute;
+	top:160px;
+	right:140px;
+	}
+
+	
+	
+	#innid
+	{
+	position:relative;
+	width:400px;
+	height:250px;
+
+	}
+	
+	#hm
+	{
+	position:absolute;
+	top:10px;
+	left:30px;
+	width:100px;
+	height:80px;
+	border-radius: 8px;
+	box-shadow: 5px 5px 4px #216783;
+	}
+	#logo{
+	position:absolute;
+	top:10px;
+	left:150px;
+	width:100px;
+	height:80px;
+	border-radius: 8px;
+	box-shadow: 5px 5px 2px #216783;
+	}
+	
+	
+	#para{
+	font-size: 80 px;
+	color:white;
+	position:absolute;
+	right:200px;
+	top:15px;
+	font:40;
+	}
+	body{
+     background-size: 1366px 736px;
+	 background-position:contain;
+      background-repeat: no-repeat;
+	  max-width: 100%;
+    overflow-x: hidden;
+	}
+	
+	
+	
+	#sendforgot{
+	border-radius: 10px;
+		padding: 5px; 
+	position:absolute;
+	top:95px;
+	left:1px;
+	width:75px;
+	height:30px;
+	}
+	#loginback
+	{
+	border-radius: 10px;
+		padding: 5px; 
+	position:absolute;
+	top:95px;
+	left:85px;
+	width:100px;
+	height:30px;
+	}
+	
+	
+	#forgotemail
+	{
+	border-radius: 10px;
+		padding: 10px; 
+		width: 250px;
+		height: 12px;
+	}
+	#text{
+	color: red;
+	}
+	
+	
+</style>
+  
+  
+  
+</head>
+<body background="/TestPortal/img/backimg2.jpg" onload="onload()">
+<img id="logo" src="/TestPortal/img/inn_fore.jpg">
+	
+<img id="hm" src="/TestPortal/img/hm_logo_master.jpg">
+<p id="para"><img src="/TestPortal/img/inn.png"></p>
+
+<div class="form" id="divlogin"> 
+	<form id="logform" role="form" method=post novalidate action="j_security_check" >
+	
+		<input type="text" id="fname" placeholder="Your Name.." name="j_username">
+		<input type="password" id="lname" placeholder="Last Name" name="j_password">
+		
+	
+	<button type="submit" id="submit" onclick="validate()">Login</button> 
+	<button id="forgot" onclick=forgot()> Forgot Password </button>
+	</form>
+</div>
+
+<div class="forgotform" id="divforgot" > 
+<p id="mailsent"><p>
+<p id="text"><b> Get new Password via registered Email </b><p>
+
+		<input type="text" id="forgotemail" placeholder="Enter email..">
+		<button id="sendforgot" onclick=sendmailforgot()> Send</button>
+		<button id="loginback" onclick=loginback()> Login Back</button>
+</div>
+
+<script type="text/javascript">
+function onload()
+{
+    document.getElementById("divlogin").style.visibility="visible";
+	document.getElementById("divforgot").style.visibility="hidden";
+	}
+function forgot()
+{
+	document.getElementById("divlogin").style.visibility="hidden";
+	document.getElementById("divforgot").style.visibility="visible";
+}
+
+function sendmailforgot()
+{
+alert("Check mail and login again");
+document.getElementById("divforgot").style.visibility="hidden";
+document.getElementById("divlogin").style.visibility="visible";
+}
+
+function loginback()
+{
+document.getElementById("divforgot").style.visibility="hidden";
+document.getElementById("divlogin").style.visibility="visible";
+}
+
+function setCookie(cookieData){
+	
+	
+	var d=new Date();
+	d.setTime(d.getTime() + (15*60*1000));// 15 is minutes
+	var expires="expires="+d.toUTCString();
+	document.cookie="HMSession="+cookieData+";"+expires+";path=/";
+}
+
+function validate(){
+	var uname=document.getElementById("fname").value;
+	var pass=document.getElementById("lname").value;
+	
+	$.ajax({
+        type: "POST",
+        contentType: "application/text",
+        url: "j_security_check",
+        // This is the type what you are waiting back from the server
+        dataType: "text",
+        async: false,
+        crossDomain: false,
+        data: {
+            j_username: uname,
+            j_password: pass,
+        },
+        success: function(data) {
+           // alert('Thanks for your signin in! ');
+            window.location = "/";
+        }
+    });
+}
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This web.xml file is not required when using Servlet 3.0 container,
+     see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <servlet>   
+    <servlet-name>jersey-servlet</servlet-name>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		 <init-param>
+      <param-name>jersey.config.server.provider.packages</param-name>
+      <param-value>com.TestPortal</param-value>
+    </init-param>
+		<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+		<servlet-name>jersey-servlet</servlet-name>
+		<url-pattern>/webapi/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- <filter>
+		<description>Primary Platform Entry Filter description</description>
+		<filter-name>PRIMARY_PLATFORM_ENTRY_FILTER</filter-name>
+		<filter-class>com.Secure.SecureFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>PRIMARY_PLATFORM_ENTRY_FILTER</filter-name>
+		<url-pattern>/*</url-pattern>
+		<url-pattern>/j_security_check</url-pattern>
+	</filter-mapping> -->
+ 
+ 
+ <!-- <servlet>
+    <description></description>
+    <servlet-name>UIAssem</servlet-name>
+    <servlet-class>com.First.UIAssem</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UIAssem</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping> -->
+  
+  <security-constraint>
+        <web-resource-collection>
+                <web-resource-name>TestPortal</web-resource-name>
+                <description> accessible by authenticated users of the tomcat role</description>
+                <url-pattern>/webapi/*</url-pattern>
+                <http-method>GET</http-method>
+                <http-method>POST</http-method>
+                <http-method>PUT</http-method>
+                <http-method>DELETE</http-method>
+        </web-resource-collection>
+        <!-- <auth-constraint>
+                <description>These roles are allowed access</description>
+                <role-name>ituser</role-name>
+        </auth-constraint> -->
+</security-constraint>
+
+<!-- <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>default</realm-name>
+        <form-login-config>
+                <form-login-page>/index.html</form-login-page>
+                <form-error-page>/Page1.html</form-error-page>
+        </form-login-config>
+</login-config> 
+ -->
+<security-role>
+        <description>Only 'tomcat' role is allowed to access this web application</description>
+        <role-name>ituser</role-name>
+</security-role>
+  <!--<login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>default</realm-name>
+	</login-config> -->
+  
+  
+</web-app>

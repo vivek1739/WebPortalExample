@@ -1,0 +1,249 @@
+<html lang="en">
+<head>
+<title>Jindal Home</title>
+<meta charset="utf-8">
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+<style>
+.inputText {
+	border-radius: 5px;
+	padding: 8px;
+	width: 160px;
+	height: 30px;
+	position: relative;
+	left: 20px;
+}
+
+#submit {
+	border-radius: 5px;
+	padding: 4px;
+	width: 95px;
+	height: 30px;
+	position: relative;
+	left: 30px;
+}
+
+#logo {
+	position: relative;
+	top: 10px;
+	left: 30px;
+	width: 100px;
+	height: 80px;
+}
+
+.addformclass {
+	font-size: 80 px;
+	color: white;
+	top: 15px;
+	font: 40;
+}
+
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0, 0, 0); /* Fallback color */
+	background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+	border-radius: 5px;
+	background-color: #14535f;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
+		rgba(0, 0, 0, 0.19);
+}
+
+/* The Close Button */
+.close {
+	color: #aaaaaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.close:hover, .close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+</style>
+
+
+</head>
+
+
+<body onload="onload()">
+
+	<!-- ## Default Div :: present always ## -->
+	<div id="divdefault">
+		<img id="logo" src="jindallogo.jpg" /> <br>
+		<br>
+		<form id="defaultform">
+			<select id="select" onchange="showTableData()">
+				<option value="NaN" selected disabled>select an option</option>
+				<option value="HR">HR</option>
+				<option value="Finance">Finance</option>
+				<option value="Legal">Legal</option>
+			</select> <input type="button" value=" Add " id="addbtn" /> <input
+				type="button" value=" Delete " id="deletebtn" /> <input
+				type="button" value=" Update " id="updatebtn" />
+		</form>
+	</div>
+
+	<!-- ## Div for addition of an element ## -->
+	<div id="myModal" class="modal">
+
+		<!-- Modal content -->
+		<div class="modal-content">
+			<span class="close">&times;</span>
+
+			<div class="addformclass" id="divadd">
+
+				<form id="addform" role="form" method=post action="">
+
+					<input type="text" id="addfname" class="inputText"
+						placeholder="First Name" /> <input type="password" id="addlname"
+						class="inputText" placeholder="Last Name" />
+
+					<button type="submit" id="submit" onclick="addRequest()">Submit</button>
+				</form>
+			</div>
+
+
+		</div>
+
+	</div>
+
+
+	<!-- ## Div for deletion of an element ## -->
+	<div class="deleteformclass" id="divdelete">
+		<p id="text">
+			<b> Enter the Id to be deleted </b>
+		<p>
+
+			<input type="text" id="getid" placeholder="Id">
+			<button id="deleteid" onclick="deleteId()">Delete</button>
+	</div>
+
+	<div>
+		<table id="DataTable" border="1">
+		</table>
+	</div>
+
+
+	<script type="text/javascript">
+
+var myList;
+
+function onload()
+{
+	document.getElementById("divadd").style.visibility="hidden";
+	document.getElementById("divdelete").style.visibility="hidden";
+}
+
+function showTableData(){
+document.getElementById("DataTable").innerHTML = "";
+var country=[{"code":"ABW","continent":"North America","governmentForm":"Nonmetropolitan Territory of The Netherlands","name":"Aruba","region":"Caribbean"},{"code":"AFG","continent":"Asia","governmentForm":"Islamic Emirate","name":"Afghanistan","region":"Southern and Central Asia"},{"code":"AGO","continent":"Africa","governmentForm":"Republic","name":"Angola","region":"Central Africa"},{"code":"AIA","continent":"North America","governmentForm":"Dependent Territory of the UK","name":"Anguilla","region":"Caribbean"}];
+	myList=JSON.stringify(country);
+	myList=JSON.parse(myList);
+	buildHtmlTable("#DataTable");
+
+	/* $.ajax(
+			{
+			url: "http://localhost:8085/TestPortal/webapi/myresource/country",
+			type: "POST",
+			success:function(maindta)
+			{
+				myList=JSON.stringify(maindta);
+				myList=JSON.parse(myList);
+				buildHtmlTable("#DataTable");
+			}
+			});*/
+}
+
+<!-- These two methods for forming the table -->
+function buildHtmlTable(selector) {
+
+	  var columns = addAllColumnHeaders(myList, selector);
+
+	  for (var i = 0; i < myList.length; i++) {
+	    var row$ = $('<tr/>');
+	    for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+	      var cellValue = myList[i][columns[colIndex]];
+	      if (cellValue == null) cellValue = "";
+	      row$.append($('<td/>').html(cellValue));
+	    }
+	    $(selector).append(row$);
+	  }
+	}
+
+
+
+function addAllColumnHeaders(myList, selector) {
+	  var columnSet = [];
+	  var headerTr$ = $('<tr/>');
+
+	  for (var i = 0; i < myList.length; i++) {
+	    var rowHash = myList[i];
+	    for (var key in rowHash) {
+	      if ($.inArray(key, columnSet) == -1) {
+	        columnSet.push(key);
+	        headerTr$.append($('<th/>').html(key));
+	      }
+	    }
+	  }
+	  $(selector).append(headerTr$);
+
+	  return columnSet;
+}
+
+
+
+var modal = document.getElementById('myModal')
+var addbtn=document.getElementById("addbtn");
+addbtn.onclick = function() {
+   var selectedOption=document.getElementById("select").value;
+	if ( selectedOption == "NaN"){
+		alert("Please select departement");
+	}else{
+	document.getElementById("divadd").style.visibility="visible";
+    modal.style.display = "block";
+   }
+}
+var deletebtn=document.getElementById("deletebtn");
+deletebtn.onclick = function() {
+    showDeleteForm();
+}
+var updatebtn=document.getElementById("updatebtn");
+updatebtn.onclick = function() {
+    showDeleteForm();
+}
+
+var span = document.getElementsByClassName("close")[0];
+span.onclick = function() {
+    modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+</script>
+
+</body>
+</html>
